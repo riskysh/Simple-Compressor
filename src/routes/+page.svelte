@@ -1,22 +1,32 @@
 <script>
   import imageCompression from 'browser-image-compression';
   let compressedFile;
+  let progress = 0;
+  let quality = 1;
+  let selectedFile;
+  let uploadProgress = 0;
 
-  async function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+  async function handleImageUpload() {
+    if (!selectedFile) return;
 
     const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true
+      useWebWorker: true,
+      onProgress: (number) => progress = number,
+      initialQuality: quality,
+      alwaysKeepResolution: true
     };
 
     try {
-      compressedFile = await imageCompression(file, options);
+      compressedFile = await imageCompression(selectedFile, options);
+      progress = 100;
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function handleFileChange(e) {
+    selectedFile = e.target.files[0];
+    uploadProgress = 100;
   }
 
   function downloadImage() {
@@ -35,16 +45,16 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<section>
+<section class="  text-emerald-300 h-screen bg-emerald-700">
 
 	<h1 class="text-5xl font-bold">Simple Compressor</h1>
+  <h2 class="text-4xl font-bold">upload progress {uploadProgress}%</h2>
+  <h2 class="text-4xl font-bold">compressor progress {progress}%</h2>
 
-	<input type="file" accept="image/*" on:change={handleImageUpload} />
-
+	<input type="file" accept="image/*" multiple on:change={handleFileChange} />
+  <h2 class="text-4xl font-bold">quality {quality}</h2>
+  <input type="range" min="0.1" max="1" step="0.1" bind:value={quality} />
+  <button on:click={handleImageUpload} class=" bg-stone-600">compress</button>
 	<button class=" bg-stone-500" on:click={downloadImage}>Download Compressed Image</button>
 
 </section>
-
-<style>
-
-</style>
