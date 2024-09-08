@@ -29,6 +29,10 @@
     uploadProgress = 100;
   }
 
+  function openFileDialog() {
+    document.getElementById('fileInput').click();
+  }
+
   function downloadImage() {
     if (!compressedFile) return;
     const url = URL.createObjectURL(compressedFile);
@@ -52,11 +56,14 @@
     <p class=" text-gray-200 text-center   mt-7  text-bs">
       Reduce the file size of your files with our Simple Compressor. Compress files quickly and easily.
     </p>
+    <button class="text-white bg-red-700">Compress</button>
+    <button class="text-white bg-red-700">Download</button>
     <div class="w-5/12 h-72 border-dashed border-2 border border-[#27272a] grid mx-auto rounded-xl mt-10 p-8">
      <img class="lucide lucide-cloud-upload flex mx-auto" src="/upload.svg" alt="upload">
       <h1 class="text-white text-center relative bottom-2 text-xl">Drag your files here to compress</h1>
       <span class=" text-center text-white my-2">Or</span>
-      <button class="px-6 py-2 bg-sky-500 grid mx-auto my-auto  rounded-lg">Choose file</button>
+      <button class="px-6 py-2 bg-sky-500 grid mx-auto my-auto  rounded-lg" on:click={openFileDialog}>Choose file</button>
+      <input id="fileInput" type="file" accept="image/*" on:change={handleFileChange} style="display: none;" />
     </div>
   </div>
 
